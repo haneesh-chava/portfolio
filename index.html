@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purna Tech Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Roboto:wght@400;500&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 88px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page {
+        --hero-top: clamp(170px, 23vh, 290px);
+        --main-sub-gap: 48px;
+        position: relative;
+        width: 100%;
+        min-height: 100svh;
+        overflow-x: hidden;
+        background: #000;
+      }
+
+      .liquid-glass {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        background: rgba(255, 255, 255, 0.01);
+        background-blend-mode: luminosity;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+
+      .liquid-glass::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1.4px;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.45) 0%,
+          rgba(255, 255, 255, 0.15) 20%,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, 0) 60%,
+          rgba(255, 255, 255, 0.15) 80%,
+          rgba(255, 255, 255, 0.45) 100%
+        );
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+      }
+
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px clamp(20px, 4vw, 32px);
+      }
+
+      .logo,
+      .nav-pill,
+      .desktop-actions,
+      .link,
+      .hero-actions,
+      .mobile-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .logo {
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .nav-pill {
+        gap: 4px;
+        padding: 8px;
+        border-radius: 12px;
+      }
+
+      .link {
+        gap: 2px;
+        padding: 7px 12px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 14px;
+        transition: color 160ms ease, background 160ms ease;
+      }
+
+      .link:hover,
+      .link.active {
+        color: #fff;
+      }
+
+      .link.active {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .desktop-actions {
+        gap: 12px;
+      }
+
+      .desktop-actions .btn {
+        padding-right: 25px;
+        padding-left: 25px;
+        font-weight: 400;
+      }
+
+      .btn,
+      .menu-toggle {
+        border: 0;
+        cursor: pointer;
+        transition: background 160ms ease;
+      }
+
+      .btn {
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .btn.glass {
+        color: #fff;
+      }
+
+      .btn.glass:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .btn.solid {
+        background: #fff;
+        color: #000;
+      }
+
+      .btn.solid:hover {
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .menu-toggle {
+        display: none;
+        padding: 8px;
+        border-radius: 10px;
+        color: #fff;
+      }
+
+      .menu-toggle[aria-expanded="true"] .menu-icon,
+      .menu-toggle[aria-expanded="false"] .close-icon {
+        display: none;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 72px;
+        left: 16px;
+        right: 16px;
+        z-index: 11;
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      .mobile-menu.open {
+        display: flex;
+      }
+
+      .mobile-menu .link {
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+      }
+
+      .mobile-actions {
+        gap: 8px;
+        margin-top: 8px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .mobile-actions .btn {
+        flex: 1;
+      }
+
+      .hero {
+        position: absolute;
+        left: 0;
+        top: var(--hero-top);
+        bottom: 40px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: min(760px, 58vw);
+        max-width: calc(100% - 24px);
+        padding: 0 24px;
+      }
+
+      .code-copy {
+        max-width: 820px;
+        margin: 20px 0 56px;
+        font-family: "Roboto Mono", monospace;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.45;
+        letter-spacing: 0;
+      }
+
+      .code-copy,
+      .code-copy * {
+        font-family: "Roboto Mono", monospace;
+      }
+
+      .code-line {
+        margin: 0;
+      }
+
+      .code-line:first-child {
+        font-size: 22px;
+      }
+
+      .code-line + .code-line {
+        margin-top: var(--main-sub-gap);
+      }
+
+      .code-fn {
+        color: #f49a52;
+      }
+
+      .code-text {
+        color: #436943;
+      }
+
+      .code-comment {
+        color: #7b4f2c;
+      }
+
+      .code-comment span {
+        display: block;
+        min-height: 1.45em;
+      }
+
+      .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        margin-left: 4px;
+        background: currentColor;
+        transform: translateY(2px);
+      }
+
+      .typing.done .typing-cursor {
+        display: none;
+      }
+
+      .hero-actions {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .hero-actions .btn {
+        min-width: 128px;
+        padding: 12px 24px;
+        font-size: 15px;
+      }
+
+      .hero-actions .btn:first-child {
+        font-family: system-ui, sans-serif;
+        font-weight: 300;
+      }
+
+      .hero-actions .btn:nth-child(2) {
+        margin-left: 33px;
+        font-family: system-ui, sans-serif;
+        font-weight: 100;
+      }
+
+      .sections {
+        padding-top: 100svh;
+      }
+
+      .section {
+        min-height: 100svh;
+        padding: 96px 24px;
+      }
+
+      .plans-section {
+        min-height: 230svh;
+      }
+
+      .section-inner {
+        width: min(920px, 100%);
+        margin: 0 auto;
+      }
+
+      .section-title {
+        margin: 0 0 36px;
+        color: rgba(255, 255, 255, 0.72);
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .plans-stack {
+        width: min(980px, 100%);
+        margin: 0 auto;
+      }
+
+      .plan-card {
+        position: sticky;
+        top: calc(10vh + var(--i) * 25px);
+        min-height: 440px;
+        margin-bottom: 48px;
+        padding: clamp(24px, 4vw, 48px);
+        border: 2px solid #d7e2ea;
+        border-radius: 50px;
+        background: #0c0c0c;
+        transform: scale(1);
+        transform-origin: top center;
+      }
+
+      .plan-card-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.75fr);
+        gap: clamp(28px, 5vw, 72px);
+        align-items: center;
+      }
+
+      .plan-meta {
+        margin: 0 0 22px;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .plan-title {
+        margin: 0 0 18px;
+        font-size: clamp(34px, 5vw, 72px);
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .plan-copy {
+        max-width: 560px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.6;
+      }
+
+      .plan-visual {
+        display: grid;
+        gap: 14px;
+      }
+
+      .plan-shot {
+        min-height: 120px;
+        padding: 20px;
+        border: 1px solid rgba(215, 226, 234, 0.22);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .plan-shot strong {
+        display: block;
+        margin-bottom: 28px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .plan-bars {
+        display: grid;
+        gap: 10px;
+      }
+
+      .plan-bars span {
+        display: block;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(215, 226, 234, 0.45);
+      }
+
+      .plan-bars span:nth-child(2) {
+        width: 72%;
+      }
+
+      .plan-bars span:nth-child(3) {
+        width: 48%;
+      }
+
+      .contact-section {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 120px;
+      }
+
+      .contact-space {
+        width: min(920px, 100%);
+        min-height: 65svh;
+      }
+
+      svg {
+        display: block;
+      }
+
+      @media (min-width: 640px) {
+        .hero {
+          bottom: 64px;
+          padding: 0 48px;
+        }
+
+        .hero-actions .btn {
+          padding-inline: 28px;
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .page {
+          --main-sub-gap: 32px;
+        }
+
+        .nav-pill,
+        .desktop-actions {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: inline-flex;
+        }
+
+        .hero {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .section {
+          padding: 80px 20px;
+        }
+
+        .plan-card {
+          min-height: 520px;
+          border-radius: 34px;
+        }
+
+        .plan-card-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page" id="home">
+      <header class="nav">
+        <div class="logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.5 15.5c-2.2 0-4-1.6-4-3.5s1.8-3.5 4-3.5c3 0 5 7 8 7 2.2 0 4-1.6 4-3.5s-1.8-3.5-4-3.5c-3 0-5 7-8 7Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Equilibrium</span>
+        </div>
+
+        <nav class="nav-pill liquid-glass" aria-label="Main navigation">
+          <a class="link active" href="#home">Home</a>
+          <a class="link" href="#plans">Plans</a>
+          <a class="link" href="#contact">Contact Us</a>
+        </nav>
+
+        <div class="desktop-actions">
+          <button class="btn solid" type="button">Log in</button>
+        </div>
+
+        <button class="menu-toggle liquid-glass" type="button" aria-label="Open menu" aria-expanded="false">
+          <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <svg class="close-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </header>
+
+      <nav class="mobile-menu liquid-glass" aria-label="Mobile navigation">
+        <a class="link active" href="#home">Home</a>
+        <a class="link" href="#plans">Plans</a>
+        <a class="link" href="#contact">Contact Us</a>
+        <div class="mobile-actions">
+          <button class="btn solid" type="button">Log in</button>
+        </div>
+      </nav>
+
+      <section class="hero" aria-label="PTS hero">
+        <div class="code-copy" aria-label="Welcome message">
+          <p class="code-line">
+            <span class="code-fn">print</span><span>(</span><span class="code-text">"welcome to purna tech solutions"</span><span>)</span>
+          </p>
+          <p class="code-line code-comment typing" id="typedSubtext" aria-label="# we are here to make you achieve the heights of life have a look on our plans and have a free survey for clear look">
+            <span data-text="# we are here to make you achieve the"></span>
+            <span data-text="heights of life have a look on our plans"></span>
+            <span data-text="and have a free survey for clear look"><i class="typing-cursor" aria-hidden="true"></i></span>
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn solid" type="button">Plans</button>
+          <button class="btn glass liquid-glass" type="button">Survey</button>
+        </div>
+      </section>
+
+      <div class="sections">
+        <section class="section plans-section" id="plans" aria-label="Plans">
+          <div class="section-inner plans-stack">
+            <h2 class="section-title">Plans</h2>
+            <article class="plan-card" style="--i: 0; --target-scale: 0.96">
+              <div class="plan-card-grid">
+                <div>
+                  <p class="plan-meta">01 / Foundation</p>
+                  <h3 class="plan-title">Starter Plan</h3>
+                  <p class="plan-copy">Build direction with a clear roadmap, weekly tasks, and the first habits that make progress visible.</p>
+                </div>
+                <div class="plan-visual" aria-hidden="true">
+                  <div class="plan-shot">
+                    <strong>Roadmap</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="plan-shot">
+                    <strong>Milestones</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article class="plan-card" style="--i: 1; --target-scale: 0.98">
+              <div class="plan-card-grid">
+                <div>
+                  <p class="plan-meta">02 / Growth</p>
+                  <h3 class="plan-title">Guided Plan</h3>
+                  <p class="plan-copy">Move faster with structured reviews, project practice, and feedback loops that keep your work improving.</p>
+                </div>
+                <div class="plan-visual" aria-hidden="true">
+                  <div class="plan-shot">
+                    <strong>Projects</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="plan-shot">
+                    <strong>Reviews</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article class="plan-card" style="--i: 2; --target-scale: 1">
+              <div class="plan-card-grid">
+                <div>
+                  <p class="plan-meta">03 / Career</p>
+                  <h3 class="plan-title">Intensive Plan</h3>
+                  <p class="plan-copy">Prepare for real opportunities with portfolio polish, mock interviews, and focused placement support.</p>
+                </div>
+                <div class="plan-visual" aria-hidden="true">
+                  <div class="plan-shot">
+                    <strong>Portfolio</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="plan-shot">
+                    <strong>Interviews</strong>
+                    <div class="plan-bars"><span></span><span></span><span></span></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section contact-section" id="contact" aria-label="Contact us">
+          <div class="contact-space" aria-hidden="true"></div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const toggle = document.querySelector(".menu-toggle");
+      const menu = document.querySelector(".mobile-menu");
+
+      toggle.addEventListener("click", () => {
+        const open = menu.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open);
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      });
+
+      menu.querySelectorAll(".link").forEach((link) => {
+        link.addEventListener("click", () => {
+          menu.classList.remove("open");
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-label", "Open menu");
+        });
+      });
+
+      const typed = document.getElementById("typedSubtext");
+      const lines = [...typed.querySelectorAll("span")];
+      const cursor = typed.querySelector(".typing-cursor");
+      const text = lines.map((line) => line.dataset.text);
+      const total = text.join("").length;
+
+      function renderTyped(count) {
+        let left = count;
+        lines.forEach((line, index) => {
+          const value = text[index];
+          line.textContent = value.slice(0, Math.max(0, left));
+          left -= value.length;
+        });
+        const active = lines.find((line) => line.textContent.length < line.dataset.text.length) || lines.at(-1);
+        active.append(cursor);
+      }
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        renderTyped(total);
+        typed.classList.add("done");
+      } else {
+        const started = performance.now();
+        requestAnimationFrame(function tick(now) {
+          const count = Math.floor(Math.min((now - started) / 2000, 1) * total);
+          renderTyped(count);
+          if (count < total) requestAnimationFrame(tick);
+          else typed.classList.add("done");
+        });
+      }
+
+      const navLinks = [...document.querySelectorAll('a.link[href^="#"]')];
+      const navSections = ["home", "plans", "contact"].map((id) => document.getElementById(id));
+      const planCards = [...document.querySelectorAll(".plan-card")];
+
+      function updateActiveNav() {
+        const marker = window.scrollY + window.innerHeight * 0.45;
+        const active = navSections.reduce((current, section) => (section.offsetTop <= marker ? section : current), navSections[0]);
+
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${active.id}`);
+        });
+      }
+
+      function updatePlans() {
+        planCards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const progress = Math.min(Math.max((window.innerHeight - rect.top) / window.innerHeight, 0), 1);
+          const target = Number.parseFloat(getComputedStyle(card).getPropertyValue("--target-scale")) || 1;
+          card.style.transform = `scale(${1 - (1 - target) * progress})`;
+        });
+
+        updateActiveNav();
+      }
+
+      updatePlans();
+      window.addEventListener("scroll", updatePlans, { passive: true });
+      window.addEventListener("resize", updatePlans);
+    </script>
+  </body>
+</html>
