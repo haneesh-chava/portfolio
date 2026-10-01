@@ -15,16 +15,14 @@
         --nav-border: rgba(255, 255, 255, 0.72);
         --nav-text: #292a25;
         --nav-text-hover: #11120f;
-        --nav-active-pill: rgba(255, 255, 255, 0.58);
         --content-gutter: 10%;
       }
       .nav-container { position: fixed; top: 24px; left: var(--content-gutter); z-index: 100; display: flex; justify-content: flex-start; }
       .nav-toggle { display: none; }
       .editorial-nav { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--nav-border); border-radius: 999px; background: var(--nav-bg); box-shadow: 0 8px 28px rgba(35, 32, 24, .12), 0 1px 0 rgba(255, 255, 255, .9) inset, 0 -1px 0 rgba(35, 32, 24, .06) inset; backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); }
-      .nav-item { position: relative; padding: 8px 18px; border-radius: 999px; color: var(--nav-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13.5px; font-weight: 500; letter-spacing: .02em; text-decoration: none; transition: all .25s cubic-bezier(.2, .8, .2, 1); }
-      .nav-item:hover { color: var(--nav-text-hover); background: rgba(255, 255, 255, .36); }
-      .nav-item.active { color: #171714; background: var(--nav-active-pill); box-shadow: 0 1px 3px rgba(35, 32, 24, .1), 0 0 0 1px rgba(255, 255, 255, .72) inset; }
-      .nav-item.active::after { position: absolute; bottom: 3px; left: 50%; width: 3px; height: 3px; border-radius: 50%; background: #a3c988; content: ""; transform: translateX(-50%); }
+      .nav-item { padding: 8px 18px; border-radius: 999px; color: var(--nav-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13.5px; font-weight: 500; letter-spacing: .02em; text-decoration: none; transition: color .25s cubic-bezier(.2, .8, .2, 1); }
+      .nav-item:hover, .nav-item.active { color: var(--nav-text-hover); }
+      .nav-item.active { font-weight: 600; }
       section { --section-image: url("assets/paper-background.png"); position: relative; isolation: isolate; min-height: calc(100vw * 1011 / 1555); padding: 120px var(--content-gutter) 72px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; background-color: #F4F1EA; }
       section::before { position: absolute; z-index: -1; inset: 0; background: #F4F1EA var(--section-image) center / cover no-repeat; content: ""; pointer-events: none; }
       #home { --section-image: url("assets/haneesh-hero-background.png"); }
@@ -167,18 +165,12 @@
         });
       }
 
-      function updateActiveSection() {
-        const midpoint = window.innerHeight / 2;
-        const current = [...sections].find((section) => {
-          const bounds = section.getBoundingClientRect();
-          return bounds.top <= midpoint && bounds.bottom > midpoint;
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
-        if (current) setActiveSection(current.id);
-      }
-
-      window.addEventListener("scroll", updateActiveSection, { passive: true });
-      window.addEventListener("resize", updateActiveSection);
-      updateActiveSection();
+      }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+      sections.forEach((section) => sectionObserver.observe(section));
     </script>
   </body>
 </html>
