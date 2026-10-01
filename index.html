@@ -18,11 +18,10 @@
         --content-gutter: 10%;
       }
       .nav-container { position: fixed; top: 24px; left: var(--content-gutter); z-index: 100; display: flex; justify-content: flex-start; }
-      .nav-toggle { display: none; }
+      .mobile-menu { display: none; }
       .editorial-nav { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--nav-border); border-radius: 999px; background: var(--nav-bg); box-shadow: 0 8px 28px rgba(35, 32, 24, .12), 0 1px 0 rgba(255, 255, 255, .9) inset, 0 -1px 0 rgba(35, 32, 24, .06) inset; backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); }
       .nav-item { padding: 8px 18px; border-radius: 999px; color: var(--nav-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13.5px; font-weight: 500; letter-spacing: .02em; text-decoration: none; transition: color .25s cubic-bezier(.2, .8, .2, 1); }
-      .nav-item:hover, .nav-item.active { color: var(--nav-text-hover); }
-      .nav-item.active { font-weight: 600; }
+      .nav-item:hover { color: var(--nav-text-hover); }
       section { --section-image: url("assets/paper-background.png"); position: relative; isolation: isolate; min-height: calc(100vw * 1011 / 1555); padding: 120px var(--content-gutter) 72px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; background-color: #F4F1EA; }
       section::before { position: absolute; z-index: -1; inset: 0; background: #F4F1EA var(--section-image) center / cover no-repeat; content: ""; pointer-events: none; }
       #home { --section-image: url("assets/haneesh-hero-background.png"); }
@@ -59,13 +58,16 @@
       @media (max-width: 700px) {
         :root { --content-gutter: 7%; }
         .nav-container { top: 14px; flex-direction: column; align-items: flex-start; gap: 8px; }
-        .nav-toggle { display: grid; width: 46px; height: 46px; place-content: center; gap: 5px; border: 1px solid var(--nav-border); border-radius: 50%; background: var(--nav-bg); box-shadow: 0 8px 28px rgba(35, 32, 24, .12), 0 1px 0 rgba(255, 255, 255, .9) inset, 0 -1px 0 rgba(35, 32, 24, .06) inset; backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); cursor: pointer; }
+        .desktop-nav { display: none; }
+        .mobile-menu { position: relative; display: block; }
+        .nav-toggle { display: grid; width: 46px; height: 46px; place-content: center; gap: 5px; list-style: none; border: 1px solid var(--nav-border); border-radius: 50%; background: var(--nav-bg); box-shadow: 0 8px 28px rgba(35, 32, 24, .12), 0 1px 0 rgba(255, 255, 255, .9) inset, 0 -1px 0 rgba(35, 32, 24, .06) inset; backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); cursor: pointer; }
+        .nav-toggle::-webkit-details-marker { display: none; }
         .nav-toggle span { display: block; width: 17px; height: 1.5px; border-radius: 2px; background: var(--nav-text); transition: transform .2s ease, opacity .2s ease; }
-        .nav-container.menu-open .nav-toggle span:first-child { transform: translateY(3.25px) rotate(45deg); }
-        .nav-container.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }
-        .nav-container.menu-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
-        .editorial-nav { display: none; width: min(210px, calc(100vw - 2 * var(--content-gutter))); flex-direction: column; align-items: stretch; gap: 3px; padding: 7px; border-radius: 23px; }
-        .nav-container.menu-open .editorial-nav { display: flex; }
+        .mobile-menu[open] .nav-toggle span:first-child { transform: translateY(3.25px) rotate(45deg); }
+        .mobile-menu[open] .nav-toggle span:nth-child(2) { opacity: 0; }
+        .mobile-menu[open] .nav-toggle span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+        .mobile-menu .editorial-nav { display: none; width: min(210px, calc(100vw - 2 * var(--content-gutter))); flex-direction: column; align-items: stretch; gap: 3px; padding: 7px; border-radius: 23px; }
+        .mobile-menu[open] .editorial-nav { display: flex; }
         .nav-item { padding: 10px 14px; font-size: 13px; }
         section { min-height: 0; padding: 100px var(--content-gutter) 56px; }
         section::before { background-position: center; }
@@ -83,15 +85,21 @@
   </head>
   <body>
     <header class="nav-container">
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation menu">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="editorial-nav" id="primary-navigation" aria-label="Main Navigation">
+      <nav class="editorial-nav desktop-nav" aria-label="Main Navigation">
         <a href="#home" class="nav-item">Home</a>
         <a href="#about" class="nav-item">About</a>
         <a href="#work" class="nav-item">Work</a>
         <a href="#contact" class="nav-item">Contact</a>
       </nav>
+      <details class="mobile-menu">
+        <summary class="nav-toggle" aria-label="Toggle navigation menu"><span></span><span></span><span></span></summary>
+        <nav class="editorial-nav" aria-label="Mobile Navigation">
+          <a href="#home" class="nav-item">Home</a>
+          <a href="#about" class="nav-item">About</a>
+          <a href="#work" class="nav-item">Work</a>
+          <a href="#contact" class="nav-item">Contact</a>
+        </nav>
+      </details>
     </header>
     <main>
       <section id="home" aria-labelledby="home-title">
@@ -130,47 +138,5 @@
         </div>
       </section>
     </main>
-    <script>
-      const sections = document.querySelectorAll("main section[id]");
-      const navLinks = document.querySelectorAll(".nav-item[href^='#']");
-      const navContainer = document.querySelector(".nav-container");
-      const navToggle = document.querySelector(".nav-toggle");
-
-      function closeMenu() {
-        navContainer.classList.remove("menu-open");
-        navToggle.setAttribute("aria-expanded", "false");
-        navToggle.setAttribute("aria-label", "Open navigation menu");
-      }
-
-      navToggle.addEventListener("click", () => {
-        const isOpen = navToggle.getAttribute("aria-expanded") !== "true";
-        navContainer.classList.toggle("menu-open", isOpen);
-        navToggle.setAttribute("aria-expanded", String(isOpen));
-        navToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
-      });
-      navLinks.forEach((link) => link.addEventListener("click", closeMenu));
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && navContainer.classList.contains("menu-open")) {
-          closeMenu();
-          navToggle.focus();
-        }
-      });
-
-      function setActiveSection(id) {
-        navLinks.forEach((link) => {
-          const isActive = link.getAttribute("href") === `#${id}`;
-          link.classList.toggle("active", isActive);
-          if (isActive) link.setAttribute("aria-current", "location");
-          else link.removeAttribute("aria-current");
-        });
-      }
-
-      const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
-      sections.forEach((section) => sectionObserver.observe(section));
-    </script>
   </body>
 </html>
